@@ -34,16 +34,16 @@ import subprocess
 
 import base
 
+
 class CephPGPlugin(base.Base):
 
     def __init__(self):
         base.Base.__init__(self)
-        self.prefix = 'ceph'
 
     def get_stats(self):
         """Retrieves stats from ceph pgs"""
 
-        ceph_cluster = "%s-%s" % (self.prefix, self.cluster)
+        ceph_cluster = "%s.%s" % (self.prefix, self.cluster)
 
         data = { ceph_cluster: { 'pg': { } }  }
         output = None
@@ -70,7 +70,7 @@ class CephPGPlugin(base.Base):
     
         # osd perf data
         for osd in json_data['osd_stats']:
-            osd_id = "osd-%s" % osd['osd']
+            osd_id = "osd.%s" % osd['osd']
             data[ceph_cluster][osd_id] = {}
             data[ceph_cluster][osd_id]['kb_used'] = osd['kb_used']
             data[ceph_cluster][osd_id]['kb_total'] = osd['kb']
@@ -85,11 +85,13 @@ try:
     plugin = CephPGPlugin()
 except Exception as exc:
     collectd.error("ceph-pg: failed to initialize ceph pg plugin :: %s :: %s"
-            % (exc, traceback.format_exc()))
+                   % (exc, traceback.format_exc()))
+
 
 def configure_callback(conf):
     """Received configuration information"""
     plugin.config_callback(conf)
+
 
 def read_callback():
     """Callback triggerred by collectd on read"""

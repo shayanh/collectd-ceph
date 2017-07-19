@@ -36,16 +36,16 @@ import subprocess
 
 import base
 
+
 class CephMonPlugin(base.Base):
 
     def __init__(self):
         base.Base.__init__(self)
-        self.prefix = 'ceph'
 
     def get_stats(self):
         """Retrieves stats from ceph mons"""
 
-        ceph_cluster = "%s-%s" % (self.prefix, self.cluster)
+        ceph_cluster = "%s.%s" % (self.prefix, self.cluster)
 
         data = { ceph_cluster: { 'mon': { 'number': 0, 'quorum': 0 } } }
         output = None
@@ -73,9 +73,11 @@ except Exception as exc:
     collectd.error("ceph-mon: failed to initialize ceph mon plugin :: %s :: %s"
             % (exc, traceback.format_exc()))
 
+
 def configure_callback(conf):
     """Received configuration information"""
     plugin.config_callback(conf)
+
 
 def read_callback():
     """Callback triggerred by collectd on read"""

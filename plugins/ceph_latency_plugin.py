@@ -35,26 +35,27 @@ import subprocess
 
 import base
 
+
 class CephLatencyPlugin(base.Base):
 
     def __init__(self):
         base.Base.__init__(self)
-        self.prefix = 'ceph'
 
     def get_stats(self):
         """Retrieves stats regarding latency to write to a test pool"""
 
-        ceph_cluster = "%s-%s" % (self.prefix, self.cluster)
+        ceph_cluster = "%s.%s" % (self.prefix, self.cluster)
 
         data = { ceph_cluster: {} }
 
         output = None
         try:
             output = subprocess.check_output(
-              "timeout 30s rados --cluster "+ self.cluster +" -p data bench 10 write -t 1 -b 65536 2>/dev/null | grep -i latency | awk '{print 1000*$3}'", shell=True)
+              "timeout 30s rados --cluster "+ self.cluster + " -p " + self.testpool +
+              " bench 10 write -t 1 -b 65536 2>/dev/null | grep -i latency | awk '{print 1000*$3}'", shell=True)
         except Exception as exc:
             collectd.error("ceph-latency: failed to run rados bench :: %s :: %s"
-                    % (exc, traceback.format_exc()))
+                           % (exc, traceback.format_exc()))
             return
 
         if output is None:
@@ -76,9 +77,11 @@ except Exception as exc:
     collectd.error("ceph-latency: failed to initialize ceph latency plugin :: %s :: %s"
             % (exc, traceback.format_exc()))
 
+
 def configure_callback(conf):
     """Received configuration information"""
     plugin.config_callback(conf)
+
 
 def read_callback():
     """Callback triggerred by collectd on read"""

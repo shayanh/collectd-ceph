@@ -31,14 +31,15 @@ import collectd
 import datetime
 import traceback
 
+
 class Base(object):
 
     def __init__(self):
         self.verbose = False
         self.debug = False
-        self.prefix = ''
+        self.prefix = 'ceph'
         self.cluster = 'ceph'
-        self.testpool = 'test'
+        self.testpool = 'testpool'
         self.interval = 60.0
 
     def config_callback(self, conf):
