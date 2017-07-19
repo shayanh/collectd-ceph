@@ -70,11 +70,11 @@ class CephOsdPlugin(base.Base):
 
         # pool metadata
         for pool in json_data['pools']:
-            pool_name = "pool-%s" % pool['pool_name']
-            data[ceph_cluster][pool_name] = {}
-            data[ceph_cluster][pool_name]['size'] = pool['size']
-            data[ceph_cluster][pool_name]['pg_num'] = pool['pg_num']
-            data[ceph_cluster][pool_name]['pgp_num'] = pool['pg_placement_num']
+            pool_key = "pool.%s" % pool['pool_name'].replace('.', '-')
+            data[ceph_cluster][pool_key] = {}
+            data[ceph_cluster][pool_key]['size'] = pool['size']
+            data[ceph_cluster][pool_key]['pg_num'] = pool['pg_num']
+            data[ceph_cluster][pool_key]['pgp_num'] = pool['pg_placement_num']
 
         osd_data = data[ceph_cluster]['osd']
         # number of osds in each possible state
