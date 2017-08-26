@@ -16,7 +16,7 @@ class CephHealthPlugin(base.Base):
         ceph_cluster = "%s.%s" % (self.prefix, self.cluster)
 
         data = {ceph_cluster: {
-            'health': 0,
+            'health': {'ok': 0},
         }}
         output = None
         try:
@@ -27,7 +27,7 @@ class CephHealthPlugin(base.Base):
                            % (exc, traceback.format_exc()))
             return
 
-        if output is None:
+        if output.strip() is None:
             collectd.error('ceph-health: failed to ceph health :: output was None')
 
         if output == 'HEALTH_OK':
