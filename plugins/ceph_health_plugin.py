@@ -31,7 +31,7 @@ class CephHealthPlugin(base.Base):
             collectd.error('ceph-health: failed to ceph health :: output was None')
 
         if output == 'HEALTH_OK':
-            data[ceph_cluster]['health'] = 1
+            data[ceph_cluster]['health']['ok'] = 1
         return data
 
 try:
