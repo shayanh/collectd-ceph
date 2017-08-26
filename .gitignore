@@ -57,3 +57,4 @@ debian/collectd-ceph
 files
 
 plugins/.idea/
+.idea/
