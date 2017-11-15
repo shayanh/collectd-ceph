@@ -27,7 +27,8 @@ class CephHealthPlugin(base.Base):
                            % (exc, traceback.format_exc()))
             return
 
-        if output.strip() is None:
+        output = output.strip()
+        if output is None:
             collectd.error('ceph-health: failed to ceph health :: output was None')
 
         if output == 'HEALTH_OK':
